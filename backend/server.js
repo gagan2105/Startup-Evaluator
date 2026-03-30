@@ -1,10 +1,14 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import routes from './routes/routes.js';
+
 const app = express();
 dotenv.config();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use("/", routes);
 
 const PORT = process.env.PORT || 8080;
 const MONGO_URI = process.env.MONGO_URI;
@@ -23,6 +27,15 @@ connectDB();
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
+});
+
+app.post('/evaluate', async (req, res) => {
+  const { startUpInput } = req.body;
+
+  res.status(200).json({
+    message: 'Evaluation endpoint working',
+    received: startUpInput
+  });
 });
 
 app.listen(PORT, () => {
